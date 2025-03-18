@@ -82,7 +82,7 @@ class MainWindow(QWidget):
 
     def validate(self):
         if not self.file_path.text():
-            QMessageBox.warning(self, "Aviso", "Por favor, selecione um arquivo SPED antes de validar.")
+            QMessageBox.warning(self, "Aviso!", "Por favor, selecione um arquivo SPED antes de validar.")
             return
 
         self.progress_bar.setValue(0)
@@ -96,6 +96,9 @@ class MainWindow(QWidget):
         self.validation_thread.error_signal.connect(self.display_errors)
         self.validation_thread.finished.connect(lambda: self.btn_validate.setEnabled(True))  # Reabilita o botão
         self.validation_thread.start()
+        self.validation_thread.finished.connect(self.show_completion_message)
+        self.validation_thread.start()
+
 
     def update_progress(self, percent):
         """Atualiza a barra de progresso e o label de porcentagem."""
@@ -110,8 +113,12 @@ class MainWindow(QWidget):
     def consult_errors(self):
         """Abre a janela de erros."""
         if not self.errors:
-            QMessageBox.warning(self, "Aviso", "Nenhum erro encontrado.")
+            QMessageBox.warning(self, "Aviso!", "Nenhum erro encontrado.")
             return
 
         self.error_window = ErrorWindow(self.errors)
         self.error_window.show()
+
+    def show_completion_message(self):
+        """Exibe uma mensagem informando que o arquivo foi verificado."""
+        QMessageBox.information(self, "Aviso!", "Arquivo verificado com sucesso!", QMessageBox.Ok)
