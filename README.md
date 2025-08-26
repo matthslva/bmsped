@@ -1,0 +1,1 @@
+Validador arquivo SPED
